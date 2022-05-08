@@ -1,4 +1,3 @@
-from crypt import methods
 import warnings
 from nltk.stem import PorterStemmer
 import pickle
@@ -121,7 +120,6 @@ def predict_movies(movie_name="The Dark Knight", num=10, verbose=0, out=True, da
                 IMDB_Link = 'https://www.imdb.com/title/'+row['imdb_id']
                 st.write("IMDB Link: :", IMDB_Link)
                 st.write("*****************************************************")
-
         if(out):
             return output
 
@@ -147,6 +145,7 @@ def predict_movies(movie_name="The Dark Knight", num=10, verbose=0, out=True, da
                     st.write("IMDB Link: :", IMDB_Link)
                     st.write(
                         "*****************************************************")
+
             if(out):
                 return output
 
