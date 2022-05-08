@@ -1,3 +1,4 @@
+from crypt import methods
 import warnings
 from nltk.stem import PorterStemmer
 import pickle
@@ -8,8 +9,6 @@ import re
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.corpus import stopwords
 import nltk
-from flask import Flask, requests, jsonify
-
 nltk.download('stopwords')
 stopwords_english = set(stopwords.words('english'))
 stemmer = PorterStemmer()
