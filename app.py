@@ -9,6 +9,8 @@ import re
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.corpus import stopwords
 import nltk
+import requests
+
 nltk.download('stopwords')
 stopwords_english = set(stopwords.words('english'))
 stemmer = PorterStemmer()
@@ -19,7 +21,7 @@ data = pickle.load(open('movies.pkl', 'rb'))
 movies_list = data['title'].values
 
 
-def top_movies(num=100, quantile=0.95, data=data):
+def top_movies(num=100, quantile=0.75, data=data):
     req_votes = np.quantile(data['vote_count'], quantile)
 
     new_data = data[data['vote_count'] > req_votes]
@@ -52,6 +54,7 @@ def preprocess(data):
         set_title = set()
         doc_count = 0
         title = row['original_title'].lower().strip().split()
+        title += row['title'].lower().strip().split()
         title += row['genres'].lower().strip().split()
         title += [row['director'].lower().strip()]
         title += [row['cast'].lower().strip()]
@@ -93,7 +96,7 @@ def generate_cosine_tfidf(data, alpha=0.6):
     return cosine_similarity(tf_idf)
 
 
-movies = top_movies(10000)
+movies = top_movies(3000)
 tf_idf = generate_cosine_tfidf(movies, alpha=0.6)
 
 
@@ -137,18 +140,18 @@ def predict_movies(movie_name="The Dark Knight", num=10, verbose=0, out=True, da
                 print(
                     f'The top {num} recommended movies for "{movie_name}" are as follows:\n')
                 for ind, row in output.iterrows():
-                    st.write(select_movie_name)
-                    print("Title: {}".format(row['original_title']))
-                    print("Rating: {}".format(round(row['ratings'], 1)))
-                    print("Genres: {}".format(row['genres']))
-                    print(
-                        "IMDB Link: https://www.imdb.com/title/{}".format(row['imdb_id']))
-                    print("*****************************************************\n")
+                    st.write("Title: ", row['original_title'])
+                    st.write("Rating: ", round(row['ratings'], 1))
+                    st.write("Genres: ", row['genres'])
+                    IMDB_Link = 'https://www.imdb.com/title/'+row['imdb_id']
+                    st.write("IMDB Link: :", IMDB_Link)
+                    st.write(
+                        "*****************************************************")
             if(out):
                 return output
 
         except:
-            print("MOVIE NOT FOUND!")
+            st.write("MOVIE NOT FOUND!")
 
 
 st.title('Movie Recommendation System')
